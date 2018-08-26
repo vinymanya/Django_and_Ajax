@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>All Notes</title>
+</head>
+<body>
+	<h3>My Notes</h3>
+	<!-- display error messages -->
+	{% if messages %}
+		{% for message in messages %}
+			<p class="{{ message.tags }}">{{ message }}</p>
+		{% endfor %}
+	{% endif %}
+
+
+	{% if notes %}
+		{% for note in notes %}
+			<h4 id="sbmt">{{ note.title }} | <a href="/notes/{{ note.id }}/delete">Delete this note</a></h4>
+			<form action="/notes/{{ note.id }}/update" method="post" id="updateForm">
+				{% csrf_token %}
+				<input type="hidden" name="title" value="{{ note.title }}">
+				<textarea cols="25" rows="5" name="description">{{ note.desc }}</textarea>
+				<br>
+			</form>
+		{% endfor %}
+	{% else %}
+		<h4>There are no notes yet! Please create Note Below:</h4>
+	{% endif %}
+	<br><br>
+	<a href="/notes">Add a New Note</a> |
+	<a href="/notes/all">See All Notes</a>
+	<br><br>
+
+	<script>
+		// Submit a form without a submit button
+		document.getElementById("sbmt").onclick = function() {
+  			document.getElementById("updateForm").submit();
+		};
+	</script>
+</body>
+</html>

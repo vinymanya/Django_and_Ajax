@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax Pagination</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'leads_ajax/css/style.css' %}">
+</head>
+<body>
+	<h3>Create Ajax Leads</h3>
+	<!-- display error messages here -->
+	{% if messages %}
+		{% for message in messages %}
+			<p class="{{ message.tags }}">{{ message }}</p>
+		{% endfor %}
+	{% endif %}
+
+	<form  action="/leads/create". method="post">
+		<fieldset>
+			<legend>Create a User</legend>
+			{% csrf_token %}
+			<p>
+				<label for="fn">First Name:</label>
+				<input type="text" name="first_name" id="fn">
+			</p>
+			<p>
+				<label for="ln">Last Name:</label>
+				<input type="text" name="last_name" id="ln">
+			</p>
+			<p>
+				<label for="email">Email:</label>
+				<input type="text" name="email" id="email">
+			</p>
+			<input type="submit" value="Create User">
+		</fieldset>
+	</form>
+
+	<hr>
+	<form action="/leads/login" method="post">
+		<fieldset>
+			<legend>Login</legend>
+			{% csrf_token %}
+			Email: <input type="text" name="email">
+			<input type="submit" value="Submit">
+		</fieldset>
+	</form>
+</body>
+</html>

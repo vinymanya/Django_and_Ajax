@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home page</title>
+	<!-- Load jQuery 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>My Posts</h1>
+	<button id="show_notes">Show Existing Notes</button>
+	<div id="note_placeholder">
+		<!-- severResponse will be inserted here -->
+	</div>
+	<hr>
+	<form action="/notes/create" method="post" id="ajax_post_note">
+		{% csrf_token %}
+		Add a note:<br><textarea cols="25" rows="5" name="note" id="content"></textarea>
+		<br>
+		<input type="submit" value="Post it">
+	</form>
+
+	<script>
+		$("#ajax_post_note").submit(function(event){
+			event.preventDefault()
+			console.log("The Form was Submitted!")
+			$.ajax({
+				url: $(this).attr("action"),
+				method: "post",
+				data: $(this).serialize(),
+				success: function(serverResponse){
+					$("#note_placeholder").html(serverResponse)
+
+				}
+			})
+
+			// Clear the form input after submition
+			$("#content").val("")
+		})
+
+		$("#show_notes").click(function(){
+			console.log("SHOW ME THE NOTES!!!")
+			$.ajax({
+				url: "/notes/show_notes",
+				success: function(serverResponse){
+					$("#note_placeholder").html(serverResponse)
+				}
+			})
+		})
+	</script>
+</body>
+</html>

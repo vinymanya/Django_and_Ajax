@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>List of leads</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'leads_ajax/css/style.css' %}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Load jQuery 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<!-- display a success message here -->
+		{% if messages %}
+			{% for message in messages %}
+				<p class="{{ message.tags }}">{{ message }}</p>
+			{% endfor %}
+		{% endif %}
+		<a href="/logout">Logout</a>
+		<hr>
+		<h3>Hello <i>{{ lead.first_name }}</i>!, Welcome to Ajax Pagination</h3>
+
+		<!-- Ajax form -->
+		<form action="/leads/ajax_filter" method="post" id="ajax_form1">
+			{% csrf_token %}
+			Name: <input type="text" name="name" id="ajax_name">
+		</form>
+		<br>
+
+		<!-- pagination -->
+		{% for lead in all_leads %}
+			<a href="/leads/{{ lead.id }}/find" id="lead_id"><button>{{ lead.id }}</button></a>
+		{% endfor %}
+
+		<!-- Ajax Placeholder -->
+		<div id="ajax_placeholder1">
+			<!-- Placeholder for Ajax content -->
+		</div>
+
+	</div>
+
+	<!-- js code -->
+	<script>
+		$("#ajax_name").keyup(function(){
+			console.log("The Form is being Submitted!!!")
+			console.log("Http Request is being sent to:", $(this).parent().attr("action"))
+			$.ajax({
+				url: $(this).parent().attr("action"),
+				method: "post",
+				data: $(this).parent().serialize(),
+				success: function(serverResponse){
+					console.log("The Server Responded with:",serverResponse)
+					$("#ajax_placeholder1").html(serverResponse)
+				}
+			})
+		})
+
+		// Pagination script
+		// When the page numbers are clicked, take their values and update the form
+		$("#lead_id").click(function(event){
+			event.preventDefault()
+			console.log("The Link was clcked!")
+			console.log("Sending a request to:", $(this).attr("href"))
+			$.ajax({
+				url: $(this).attr("href"),
+				success: function(serverResponse){
+					console.log("The server Responded with:", serverResponse)
+					$("#ajax_name").val(serverResponse)
+
+				}
+			})
+		})
+	</script>
+</body>
+</html>

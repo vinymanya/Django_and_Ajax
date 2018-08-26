@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax Request with Form</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'ajax_form/css/style.css' %}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Load jQuery 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<img src="{% static 'ajax_form/img/iTunesicon.png' %}" alt="iTunes's icone">
+		<h1>Welcome to the iTunes Search App</h1>
+		<form action="/main/get_movie" method="post">
+			{% csrf_token %}
+			<label for="user_input">Enter Artist's Name</label>
+			<input type="search" name="user_input" id="user_input">
+			<input type="submit" value="Search">
+		</form>
+		<hr>
+		<!-- Container for displaying Ajax content -->
+		<div id="result"></div>
+	</div>
+
+	<!-- js code here -->
+	<script>
+		$("form").submit(function(){
+			// Make an Ajax post request to our server
+			$.post(
+				$(this).attr("action"),
+				$(this).serialize(),
+				function(response){
+					// Be Mindfull of the response object
+					console.log("The response object:", response)
+					// Construct html code
+					let html_str = ""
+					if( response.results.length !== 0 ){
+						html_str = "<video src='"+ response.results[0].previewUrl + "'</video>"
+					}else{
+						html_str = "Not Found!";
+					}
+					console.log("The html string:", html_str)
+					// Insert the content into the DOM
+					$("#result").html(html_str)
+
+				},
+				"json"
+			)
+			// Clear the form's input
+			$("#user_input").val("")
+			// Retrun 'false' to prevent the browser from refreshing
+			return false;
+		})
+	</script>
+</body>
+</html>

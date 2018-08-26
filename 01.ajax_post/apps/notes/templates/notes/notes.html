@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>All Posted Notes</title>
+	{% load static %}
+	<link rel="stylesheet" type="text/css" href="{% static 'notes/css/style.css' %}">
+</head>
+<body>
+	{% if notes %}
+		{% for note in notes %}
+			<div class="my_notes">
+				<p>{{ note.content }}</p>
+				<p>{{ note.created_at }}</p>
+				<a href="/notes/{{ note.id }}/delete">Delete this note</a>
+			</div>
+		{% endfor %}
+	{% else %}			
+		You haven't posted any note yet!
+	{% endif %}
+	<br>
+	<a href="/notes"><button>Add a Note</button></a>
+</body>
+</html>

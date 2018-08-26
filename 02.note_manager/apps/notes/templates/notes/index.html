@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index Page</title>
+	{% load static%}
+	<link rel="stylesheet" type="text/css" href="{% static 'notes/css/style.css' %}">
+	<!-- Load jQuery 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="ajax-content">
+		<!-- Ajax content -->
+	</div>
+	<hr>
+	<!-- display error messages -->
+	{% if messages %}
+		{% for message in messages %}
+			<p class="{{ message.tags }}">{{ message }}</p>
+		{% endfor %}
+	{% endif %}
+	<form action="/notes/create" method="post" id="note_form">
+		{% csrf_token %}
+		<input type="text" name="title" id="title" placeholder="Insert note title here ...">
+		<br><br>
+		<textarea cols="25" rows="5" name="description" id="desc" placeholder="Enter Description here..."></textarea>
+		<br>
+		<input type="submit" value="Add Note">
+	</form>
+
+	<!-- js code -->
+	<script>
+		$("#note_form").submit(function(event){
+			event.preventDefault()
+			console.log("Submitting the form to:", $(this).attr("action"))
+			$.ajax({
+				url: $(this).attr("action"),
+				method: "post",
+				data: $(this).serialize(),
+				success: function(serverResponse){
+					$("#ajax-content").html(serverResponse)
+				}
+			})
+
+			// Clear form inputs' values
+			$("#title").val("")
+			$("#desc").val("")
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Register</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'signup/style.css'%}">
+</head>
+<body>
+	<div class="container">
+		    <h2 class="form-signin-heading">Please sign in</h2>
+		    {% if messages %}
+			<div class="messages">
+				{% for message in messages %}
+					<p class="{{messages.tags}}">{{message}}</p>
+				{% endfor %}	
+			</div>
+		{% endif %}
+	    <form class="form-signin" action="/users/login" method="post">
+		    {% csrf_token %}
+		    <label for="inputEmail" class="sr-only">Email address</label>
+		    <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+		    <br>
+		    <label for="pw" class="sr-only">Password</label>
+		    <input type="password" name="password" id="pw" class="form-control" placeholder="Password" required>
+		    <div class="checkbox">
+		        <label>
+		            <input type="checkbox" value="remember-me"> Remember me
+		         </label>
+		    </div>
+		    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign in">
+	    </form>
+	</div> <!-- end of container -->
+	<hr>
+	<div class="container">
+	        <h2 class="form-signin-heading">Don't have an account, Please! Register</h2>
+	        {% if messages %}
+			<div class="messages">
+			{% for message in messages %}
+				<p>{{message}}</p>
+			{% endfor %}
+	    <form class="form-signin" action="/users/register" method="post">
+	    	{% csrf_token %}
+			</div>
+			{% endif %}
+	        <label for="inputfirst_name" class="sr-only">First Name:</label>
+	        <input type="text" name="first_name" id="inputfirst_name" class="form-control" placeholder="Your First Name" required autofocus>
+	        <br>
+	        <label for="inputlast_name" class="sr-only">Last Name:</label>
+	        <input type="text" name="last_name" id="inputlast_name" class="form-control" placeholder="Your Last Name" required autofocus>
+	        <br>
+	        <label for="email" class="sr-only">Email address:</label>
+	        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required autofocus>
+	        <br>
+	        <label for="inputPassword" class="sr-only">Password:</label>
+	        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+	        <br>
+	        <label for="cpw" class="sr-only">Confirm Password:</label>
+	        <input type="password" name="confirm_password" id="cpw" class="form-control" placeholder="Confirm Password" required>
+	        <br>
+	        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+	    </form>
+	</div> <!-- end of container -->
+</body>
+</html>

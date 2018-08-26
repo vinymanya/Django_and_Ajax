@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ajax Demo1</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'signup/style.css'%}">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Load jQuery 3 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<a href="/logout">Logout</a>
+		<h1>Success | Hello, <span>{{user.first_name}}</span></h1>
+		{% if messages %}
+		<div class="messages">
+			{% for message in messages %}
+				<h4>{{message}}</h4>
+			{% endfor %}	
+		</div>
+		{% endif %}
+
+		<!-- Demo 1 -->
+		<h2>Demo 1</h2>
+		<button id="button_json">Fetch an HttpResponse from user_login/all.json</button>
+		<button id="button_html">Fetch an HttpResponse from user_login/all.html</button>
+
+		<div id="placeholder1">Placeholder for Ajax content</div>
+
+		<!-- Demo 2 -->
+		<h2>Demo 2: Ajax-form</h2>
+		<form action="/users/find" method="post">
+			{% csrf_token %}
+			Find a user whose first name starts with:
+			<input type="text" name="first_name_starts_with" id="ajax_first_name">
+		</form>
+
+		<div id="placeholder2">Placeholder for Ajax Form</div>
+
+		<!-- Demo 3 -->
+		<h2>Demo 3: Ajax Form II</h2>
+		<h3>Create a new user</h3>
+
+		<form action="/users/create" method="post" id="create_user_ajax_form">
+			{% csrf_token %}
+			First Name: <input type="text" name="first_name" id="fn">
+			Last Name: <input type="text" name="last_name" id="ln">
+			Email: <input type="text" name="email" id="email">
+			<input type="submit" value="Submit">
+		</form>
+
+		<div id="placeholder3">Placeholder for Ajax Form II</div>
+	</div>
+
+
+	<!-- js code for Demo 1 here -->
+	<script>
+		$("#button_json").click(function(){
+			console.log("button_json is clicked!!!")
+			// Make an Ajax Request to this url
+			$.ajax({
+				url: "/users/all.json",
+				success: function(serverResponse){
+					console.log("Success serverResponse:", serverResponse)
+					$("#placeholder1").html(JSON.stringify(serverResponse))
+				}
+			})
+		});
+		// Built the second button
+		$("#button_html").click(function(){
+			$.ajax({
+				url: "/users/all.html",
+				success: function(serverResponse){
+					console.log("Received this from server", serverResponse)
+					$("#placeholder1").html(serverResponse)
+				}
+			})
+		});
+	</script>
+
+	<!-- js code for Demo 2 -->
+	<script>
+		$("#ajax_first_name").keyup(function(){
+			console.log("Sending Ajax request to /users/find")
+			console.log("Submitting data:", $(this).parent().serialize())
+			$.ajax({
+				url: "/users/find",
+				method: "post",
+				data: $(this).parent().serialize(),
+				success: function(serverResponse){
+					console.log("SUCCESS", serverResponse)
+					$("#placeholder2").html(serverResponse)
+				}
+			})
+		})
+	</script>
+
+	<!-- js code for Demo 3 -->
+	<script>
+		$("#create_user_ajax_form").submit(function(event){
+			event.preventDefault()
+			console.log("Sending Ajax request to:", $(this).attr("action"))
+			console.log("Submitting the following data", $(this).serialize())
+			$.ajax({
+				url: $(this).attr("action"),
+				method: "post",
+				data: $(this).serialize(),
+				success: function(serverResponse){
+					$("#placeholder3").html(serverResponse)
+				}
+			})
+			$("#fn").val("")
+			$("#ln").val("")
+			$("#email").val("")
+			return false
+		})
+	</script>
+
+</body>
+</html>
